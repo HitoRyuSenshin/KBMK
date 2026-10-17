@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" width="1200" height="340" role="img" aria-label="KBMK — Kotha Bolo Mon Khule. Language should never be a wall between human souls; it should be an open door.">
+  <defs>
+    <filter id="blurBlob" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="38"/>
+    </filter>
+    <filter id="pillShadow" x="-20%" y="-60%" width="140%" height="240%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#e24b4a" flood-opacity="0.20"/>
+    </filter>
+    <linearGradient id="pillFill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.88"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.55"/>
+    </linearGradient>
+  </defs>
+
+  <!-- soft light background -->
+  <rect x="0" y="0" width="1200" height="340" fill="#faf7f6"/>
+
+  <!-- drifting colour blobs -->
+  <g filter="url(#blurBlob)">
+    <circle cx="140" cy="52" r="118" fill="#e24b4a" opacity="0.20">
+      <animate attributeName="cx" values="140;185;140" dur="14s" repeatCount="indefinite"/>
+      <animate attributeName="cy" values="52;78;52" dur="17s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1064" cy="292" r="138" fill="#f3a7a7" opacity="0.45">
+      <animate attributeName="cx" values="1064;1010;1064" dur="16s" repeatCount="indefinite"/>
+      <animate attributeName="cy" values="292;262;292" dur="13s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="952" cy="30" r="86" fill="#e24b4a" opacity="0.12">
+      <animate attributeName="cy" values="30;58;30" dur="15s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="520" cy="330" r="96" fill="#f6c9c9" opacity="0.35">
+      <animate attributeName="cx" values="520;566;520" dur="18s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- wordmark -->
+  <text x="70" y="128" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="86" font-weight="800" letter-spacing="1" fill="#221419">KBMK</text>
+  <text x="73" y="166" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="27" font-weight="600" fill="#e24b4a">Kotha Bolo Mon Khule</text>
+  <text x="73" y="212" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="19" fill="#6f5a62">Language should never be a wall between human souls;</text>
+  <text x="73" y="240" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="19" fill="#6f5a62">it should be an open door.</text>
+
+  <!-- frosted glass pill -->
+  <g filter="url(#pillShadow)">
+    <rect x="684" y="130" width="454" height="80" rx="40" fill="url(#pillFill)" stroke="#ffffff" stroke-opacity="0.9" stroke-width="1.5"/>
+  </g>
+
+  <!-- active dot, gently pulsing -->
+  <circle cx="720" cy="170" r="12" fill="#2ecc71" opacity="0.25">
+    <animate attributeName="r" values="9;14;9" dur="2.4s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.35;0.08;0.35" dur="2.4s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="720" cy="170" r="7" fill="#2ecc71"/>
+
+  <!-- source chip -->
+  <rect x="740" y="148" width="104" height="44" rx="22" fill="#ffffff" fill-opacity="0.9" stroke="#e8dade" stroke-width="1"/>
+  <text x="792" y="176" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="17" font-weight="600" fill="#3a2a30">EN auto</text>
+
+  <!-- swap arrow -->
+  <text x="862" y="178" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="20" fill="#96707a">&#8646;</text>
+
+  <!-- target chip: label cycles through languages (SMIL, GitHub-safe) -->
+  <rect x="880" y="148" width="142" height="44" rx="22" fill="#ffffff" fill-opacity="0.9" stroke="#e8dade" stroke-width="1"/>
+  <g font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="16.5" font-weight="600" fill="#3a2a30" text-anchor="middle">
+    <text x="951" y="176" opacity="1">BN &#183; Bengali
+      <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.22;0.25;1" dur="8s" repeatCount="indefinite"/>
+    </text>
+    <text x="951" y="176" opacity="0">ES &#183; Spanish
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.25;0.28;0.47;0.5;1" dur="8s" repeatCount="indefinite"/>
+    </text>
+    <text x="951" y="176" opacity="0">AR &#183; Arabic
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.5;0.53;0.72;0.75;1" dur="8s" repeatCount="indefinite"/>
+    </text>
+    <text x="951" y="176" opacity="0">JA &#183; Japanese
+      <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.75;0.78;0.97;1" dur="8s" repeatCount="indefinite"/>
+    </text>
+  </g>
+
+  <!-- usage readout -->
+  <text x="1034" y="176" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="16" fill="#96707a">58 used</text>
+
+  <!-- sliders (settings) glyph -->
+  <g stroke="#96707a" stroke-width="2.4" stroke-linecap="round">
+    <line x1="1098" y1="158" x2="1120" y2="158"/>
+    <line x1="1098" y1="170" x2="1120" y2="170"/>
+    <line x1="1098" y1="182" x2="1120" y2="182"/>
+  </g>
+  <g fill="#fdf8f7" stroke="#96707a" stroke-width="2.2">
+    <circle cx="1113" cy="158" r="4"/>
+    <circle cx="1104" cy="170" r="4"/>
+    <circle cx="1116" cy="182" r="4"/>
+  </g>
+</svg>
