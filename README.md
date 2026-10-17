@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.6.3-e24b4a" alt="Version 0.6.3">
+  <img src="https://img.shields.io/badge/version-0.6.2-e24b4a" alt="Version 0.6.2">
   <img src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-3a2a30" alt="Platform: Windows | Linux | macOS">
   <img src="https://img.shields.io/badge/Electron-35-47848f" alt="Electron 35">
   <img src="https://img.shields.io/badge/privacy-no%20telemetry-2ecc71" alt="Privacy: no telemetry">
@@ -28,28 +28,28 @@ Microsoft Azure Translator, or DeepL — plus an experimental keyless mode.
 ## Screenshots
 
 <p align="center">
-  <img src="https://github.com/HitoRyuSenshin/KBMK/releases/download/v0.6.3/kbmk-pill.png" alt="The KBMK pill" width="640"><br>
+  <img src="https://github.com/HitoRyuSenshin/KBMK/releases/download/v0.6.2/kbmk-pill.png" alt="The KBMK pill" width="640"><br>
   <em>The glass pill — source and target languages, and your key's usage at a glance.</em>
 </p>
 
 <p align="center">
-  <img src="https://github.com/HitoRyuSenshin/KBMK/releases/download/v0.6.3/kbmk-offer.png" alt="Paste offer: good morning → buenos días" width="640"><br>
+  <img src="https://github.com/HitoRyuSenshin/KBMK/releases/download/v0.6.2/kbmk-offer.png" alt="Paste offer: good morning → buenos días" width="640"><br>
   <em>Paste offers — paste text, then press Space to swap in the translation, or Esc to keep yours.</em>
 </p>
 
 <p align="center">
-  <img src="https://github.com/HitoRyuSenshin/KBMK/releases/download/v0.6.3/kbmk-menu.png" alt="Language menu" width="480"><br>
+  <img src="https://github.com/HitoRyuSenshin/KBMK/releases/download/v0.6.2/kbmk-menu.png" alt="Language menu" width="480"><br>
   <em>100+ languages, with native names — and search understands aliases like “bangla”.</em>
 </p>
 
 <p align="center">
-  <img src="https://github.com/HitoRyuSenshin/KBMK/releases/download/v0.6.3/kbmk-blue.png" alt="The pill with a blue glass tint" width="640"><br>
+  <img src="https://github.com/HitoRyuSenshin/KBMK/releases/download/v0.6.2/kbmk-blue.png" alt="The pill with a blue glass tint" width="640"><br>
   <em>Make it yours — the glass colour and opacity are yours to pick.</em>
 </p>
 
 <p align="center">
-  <img src="https://github.com/HitoRyuSenshin/KBMK/releases/download/v0.6.3/kbmk-settings.png" alt="Settings — About and Appearance" width="420">
-  <img src="https://github.com/HitoRyuSenshin/KBMK/releases/download/v0.6.3/kbmk-settings-profiles.png" alt="Settings — key profiles" width="420"><br>
+  <img src="https://github.com/HitoRyuSenshin/KBMK/releases/download/v0.6.2/kbmk-settings.png" alt="Settings — About and Appearance" width="420">
+  <img src="https://github.com/HitoRyuSenshin/KBMK/releases/download/v0.6.2/kbmk-settings-profiles.png" alt="Settings — key profiles" width="420"><br>
   <em>Settings — the colour wheel, and your key profiles (Google, Azure, DeepL side by side).</em>
 </p>
 
@@ -107,7 +107,7 @@ in files, settings exports, or logs.
 
 Grab the latest build from the **[Releases page](../../releases)**:
 
-- **Windows — Installer (recommended):** `KBMK Setup 0.6.3.exe` — a
+- **Windows — Installer (recommended):** `KBMK Setup 0.6.2.exe` — a
   per-user installer (no admin rights needed) with Start Menu and
   desktop shortcuts.
 - **Windows — Portable:** `KBMK-Portable.exe` — a true single file;
@@ -141,9 +141,9 @@ KBMK is free. If it helps you speak across the wall, you can support its
 development by scanning any of these codes:
 
 <p>
-  <img src="https://github.com/HitoRyuSenshin/KBMK/releases/download/v0.6.3/support-qr-binance.png" alt="Support QR" width="180">
-  <img src="https://github.com/HitoRyuSenshin/KBMK/releases/download/v0.6.3/support-qr-pay.png" alt="Support QR" width="180">
-  <img src="https://github.com/HitoRyuSenshin/KBMK/releases/download/v0.6.3/support-qr-bybit.png" alt="Support QR" width="180">
+  <img src="https://github.com/HitoRyuSenshin/KBMK/releases/download/v0.6.2/support-qr-binance.png" alt="Support QR" width="180">
+  <img src="https://github.com/HitoRyuSenshin/KBMK/releases/download/v0.6.2/support-qr-pay.png" alt="Support QR" width="180">
+  <img src="https://github.com/HitoRyuSenshin/KBMK/releases/download/v0.6.2/support-qr-bybit.png" alt="Support QR" width="180">
 </p>
 
 ---
