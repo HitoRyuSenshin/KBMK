@@ -22,7 +22,6 @@ languages, through your own API key from Google Cloud Translation,
 Microsoft Azure Translator, or DeepL — plus an experimental keyless mode.
 
 📖 **Full manual:** [USER_MANUAL.md](USER_MANUAL.md) ·
-🕘 **History & development notes:** [CHANGELOG.md](CHANGELOG.md)
 
 ---
 
@@ -135,29 +134,6 @@ Grab the latest build from the **[Releases page](../../releases)**:
 | **Esc** | Dismiss a paste offer (keep the pasted text) |
 | **Ctrl+Alt+Z** | Undo the last replacement (typed or pasted) |
 | **Ctrl+Alt+T** | Pause / resume KBMK anywhere |
-
-## Development
-
-```bat
-npm install     :: install dependencies
-npm test        :: unit tests (Vitest)
-npm start       :: build + run in development
-npm run pack    :: build an unpacked app (release\win-unpacked)
-npm run dist    :: build the Windows installer + portable (release\)
-npm run dist:linux :: build the Linux AppImage (release/)
-npm run dist:mac   :: build the macOS dmg + zip (run on a Mac)
-```
-
-Stack: Electron 35 + TypeScript, Vite + Vitest. Windows-specific pieces
-(global hooks, text injection, foreground tracking) sit behind
-interfaces (`KeyHook`, `TextInjector`) so all pure logic is unit-tested.
-Native modules are prebuilt (koffi, uiohook-napi, keytar) — no compiler
-is needed to install or package.
-
-Releases are built by GitHub Actions: pushing a `v*` tag runs
-[.github/workflows/release.yml](.github/workflows/release.yml), which
-builds the Windows, Linux and macOS artifacts and attaches them to the
-GitHub Release.
 
 ## Support
 
