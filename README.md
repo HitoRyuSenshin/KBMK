@@ -140,10 +140,10 @@ Grab the latest build from the **[Releases page](../../releases)**:
 KBMK is free. If it helps you speak across the wall, you can support its
 development by scanning any of these codes:
 
-<p>
-  <img src="docs/images/support-qr-binance.png" alt="Support QR" width="180">
-  <img src="docs/images/support-qr-pay.png" alt="Support QR" width="180">
-  <img src="docs/images/support-qr-bybit.png" alt="Support QR" width="180">
+<p align="center">
+  <img src="docs/images/support-qr-binance.png" alt="Support QR" width="130">
+  <img src="docs/images/support-qr-pay.png" alt="Support QR" width="130">
+  <img src="docs/images/support-qr-bybit.png" alt="Support QR" width="130">
 </p>
 
 ---
