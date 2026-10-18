@@ -59,7 +59,7 @@
   }
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth; overflow-x:clip}
 html.lenis, html.lenis body{height:auto}
 .lenis.lenis-smooth{scroll-behavior:auto!important}
 body{
@@ -171,15 +171,32 @@ h2{font-size:clamp(2.1rem,5.2vw,3.9rem); font-weight:800}
 @media (max-width:400px){ .nav a.navlink{padding:7px 5px; font-size:.78rem} }
 @media (max-width:560px){
   .nav .wm-text{display:none}
-  .nav{gap:0; padding:8px 6px 8px 12px}
-  .nav a.navlink{font-size:.8rem; padding:7px 6px}
+  .nav{gap:0; padding:8px 6px 8px 10px}
+  .wordmark .kmark{width:28px; height:28px}
+  .nav a.navlink{font-size:.8rem; padding:7px 6px; white-space:nowrap}
   .nav .get{font-size:.82rem; padding:8px 12px; white-space:nowrap; flex:none}
   /* the live pill, tightened so every control fits a phone screen */
   .pill-stage{margin-left:-12px; margin-right:-12px}
-  .live-pill{gap:6px; padding:11px 13px; font-size:.79rem}
-  .live-pill .pill-chip{padding:6px 9px}
-  .live-pill .pill-dot{width:12px; height:12px}
-  .live-pill .ico{width:19px; height:19px}
+  .live-pill{gap:5px; padding:10px 11px; font-size:.74rem}
+  .live-pill .pill-chip{padding:5px 8px; gap:5px}
+  .live-pill .pill-dot{width:11px; height:11px}
+  .live-pill .ico{width:17px; height:17px}
+}
+@media (max-width:400px){
+  /* the colour-lab pill sits in a narrower column — its gear yields here */
+  #demo-pill .pill-gear{display:none}
+}
+@media (max-width:380px){
+  .nav{padding:8px 5px 8px 9px}
+  .wordmark .kmark{width:25px; height:25px}
+  .nav a.navlink{font-size:.76rem; padding:7px 4px}
+  .nav .get{font-size:.76rem; padding:8px 9px}
+  .live-pill{gap:4px; padding:9px 10px; font-size:.72rem}
+  .live-pill .pill-chip{padding:5px 7px}
+}
+@media (max-width:350px){
+  /* the settings gear is decoration — it yields first on the narrowest screens */
+  .live-pill .pill-gear{display:none}
 }
 
 /* ---------- HERO ---------- */
@@ -194,7 +211,7 @@ h2{font-size:clamp(2.1rem,5.2vw,3.9rem); font-weight:800}
 
 /* the live glass pill (hero + colour lab share this component) */
 .pill-stage{position:relative; max-width:640px; margin:64px auto 0; padding:10px 0 4px}
-.pill-glow{position:absolute; inset:8% -6% -30% -6%; background:radial-gradient(ellipse at 50% 40%, rgba(var(--accent-rgb),.4), rgba(244,164,158,.22) 55%, transparent 75%); filter:blur(34px); z-index:0}
+.pill-glow{position:absolute; inset:8% 0 -30% 0; background:radial-gradient(ellipse at 50% 40%, rgba(var(--accent-rgb),.4), rgba(244,164,158,.22) 55%, transparent 75%); filter:blur(34px); z-index:0}
 .live-pill{
   position:relative; z-index:1;
   display:flex; align-items:center; gap:clamp(8px,2.4vw,16px);
@@ -220,6 +237,11 @@ h2{font-size:clamp(2.1rem,5.2vw,3.9rem); font-weight:800}
 .pill-gear{color:var(--ink-soft); display:grid; place-items:center}
 #chip-target-text{display:inline-block; transition:opacity .35s var(--ease), transform .35s var(--ease)}
 #chip-target-text.swap-out{opacity:0; transform:translateY(6px)}
+/* Phones: the headline scales with the screen instead of sitting on its
+   desktop floor, so its longest line never pushes past the viewport */
+@media (max-width:560px){
+  .hero h1{font-size:clamp(2rem,10.5vw,2.9rem)}
+}
 
 /* ---------- MANIFESTO ---------- */
 .manifesto{min-height:100vh; display:flex; align-items:center; justify-content:center; padding:120px 0}
