@@ -59,13 +59,13 @@
   }
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth; overflow-x:clip}
+html{scroll-behavior:smooth; overflow-x:clip; -webkit-text-size-adjust:100%; text-size-adjust:100%}
 html.lenis, html.lenis body{height:auto}
 .lenis.lenis-smooth{scroll-behavior:auto!important}
 body{
   margin:0; background:var(--bg); color:var(--ink);
   font-family:var(--font-body); font-size:17px; line-height:1.6;
-  -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  -webkit-font-smoothing:antialiased; overflow-x:hidden; overflow-x:clip;
   /* Content protection: nothing on the page is selectable (JS adds the rest) */
   -webkit-user-select:none; user-select:none;
   -webkit-touch-callout:none;
