@@ -1,1 +1,97 @@
+# Release — build KBMK for Windows, Linux and macOS and publish the
+# artifacts to a GitHub Release.
+#
+# Trigger: push a version tag, e.g.
+#   git tag v0.6.3
+#   git push origin v0.6.3
+#
+# Each job builds on its own platform (the macOS .dmg in particular can
+# only be produced on a Mac) and uploads its files from release/ to the
+# Release for that tag.
 
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    name: Windows (installer + portable)
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build installer + portable
+        run: npm run dist
+
+      - name: Upload to the GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release/KBMK Setup *.exe
+            release/KBMK-Portable.exe
+
+  linux:
+    name: Linux (AppImage)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build AppImage
+        run: npm run dist:linux
+
+      - name: Upload to the GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release/*.AppImage
+
+  macos:
+    name: macOS (dmg + zip)
+    runs-on: macos-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build dmg + zip
+        run: npm run dist:mac
+
+      - name: Upload to the GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release/*.dmg
+            release/*.zip
