@@ -1,0 +1,625 @@
+/* KBMK styles — macOS-style glass: layered translucency, strong backdrop
+   blur + saturation, hairline highlights, one spacing scale (4/8/12/16),
+   fixed control heights so nothing overlaps or jumps. */
+
+:root {
+  --red: #e24b4a;
+  --indicator: #2ecc71;
+  --glass-opacity: 1;
+  --radius: 999px;
+  --pill-bg: rgba(255, 255, 255, calc(0.62 * var(--glass-opacity)));
+  --pill-tint: color-mix(in srgb, var(--red) 14%, transparent);
+  --inner-border: rgba(255, 255, 255, 0.55);
+  --text: #1c1c1e;
+  --text-dim: #5c5c60;
+  --chip-bg: rgba(255, 255, 255, 0.5);
+  --chip-border: rgba(0, 0, 0, 0.07);
+  --menu-bg: rgba(252, 250, 250, calc(0.78 * var(--glass-opacity)));
+  --hover: color-mix(in srgb, var(--red) 12%, transparent);
+  --card-bg: rgba(255, 255, 255, calc(0.58 * var(--glass-opacity)));
+  --card-border: rgba(255, 255, 255, 0.65);
+  --divider: rgba(0, 0, 0, 0.07);
+  --settings-bg:
+    radial-gradient(120% 90% at 0% 0%, color-mix(in srgb, var(--red) 10%, transparent), color-mix(in srgb, var(--red) 0%, transparent) 55%),
+    linear-gradient(180deg, #f8f5f4, #efe9e8);
+  --glass-blur: blur(26px) saturate(1.8);
+  --glass-blur-strong: blur(30px) saturate(1.9);
+  --shadow-pill: 0 16px 40px rgba(0, 0, 0, 0.22), 0 2px 8px rgba(0, 0, 0, 0.10);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --pill-bg: rgba(40, 38, 40, calc(0.62 * var(--glass-opacity)));
+    --pill-tint: color-mix(in srgb, var(--red) 18%, transparent);
+    --inner-border: rgba(255, 255, 255, 0.20);
+    --text: #f5f5f7;
+    --text-dim: #b8b8bd;
+    --chip-bg: rgba(255, 255, 255, 0.10);
+    --chip-border: rgba(255, 255, 255, 0.14);
+    --menu-bg: rgba(44, 42, 44, calc(0.78 * var(--glass-opacity)));
+    --hover: color-mix(in srgb, var(--red) 22%, transparent);
+    --card-bg: rgba(255, 255, 255, calc(0.07 * var(--glass-opacity)));
+    --card-border: rgba(255, 255, 255, 0.14);
+    --divider: rgba(255, 255, 255, 0.10);
+    --settings-bg:
+      radial-gradient(120% 90% at 0% 0%, color-mix(in srgb, var(--red) 14%, transparent), color-mix(in srgb, var(--red) 0%, transparent) 55%),
+      linear-gradient(180deg, #2b292b, #201e20);
+    color-scheme: dark;
+  }
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  font-size: 13px;
+  color: var(--text);
+  overflow: hidden;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+  -webkit-app-region: no-drag;
+}
+
+:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--red) 50%, transparent);
+  outline-offset: 1px;
+}
+
+/* Thin translucent scrollbars, macOS-style. */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: rgba(128, 128, 128, 0.35); border-radius: 999px; }
+::-webkit-scrollbar-track { background: transparent; }
+
+/* ---------- Pill layout: column with menu above, pill pinned to bottom ---------- */
+.pill-shell {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100vh;
+  padding: 6px;
+  gap: 8px;
+}
+/* Near the top of the screen the menu opens BELOW the pill instead
+   (M5.11): reversed column, packed to the top — pill first, then the
+   menu/toast under it. */
+.pill-shell.menu-below {
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+}
+
+.toast {
+  align-self: center;
+  max-width: 100%;
+  padding: 6px 14px;
+  border-radius: var(--radius);
+  background: var(--menu-bg);
+  backdrop-filter: var(--glass-blur-strong);
+  -webkit-backdrop-filter: var(--glass-blur-strong);
+  border: 1px solid var(--inner-border);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--text-dim);
+  opacity: 0;
+  transition: opacity 160ms ease;
+  pointer-events: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.toast.show { opacity: 1; }
+.toast.warn { color: var(--red); }
+
+/* Paste-translation offer (M5.14; restyled M5.15 as a twin of the
+   pill itself — same glass, same round border, same shadow): a modal
+   "pasted → translation" with the decision keys, sitting directly
+   above the pill until the user answers with Space / Esc (or does
+   anything else). */
+.offer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 100%;
+  height: 46px;
+  padding: 6px 14px;
+  border-radius: var(--radius);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.04)),
+    linear-gradient(var(--pill-tint), var(--pill-tint)),
+    var(--pill-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--inner-border);
+  box-shadow:
+    var(--shadow-pill),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.10);
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: var(--text);
+  -webkit-app-region: no-drag;
+}
+.offer[hidden] { display: none; }
+.offer-text {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.offer-hint {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.menu {
+  display: none;
+  flex-direction: column;
+  max-height: 272px;
+  border-radius: 20px;
+  background: var(--menu-bg);
+  backdrop-filter: var(--glass-blur-strong);
+  -webkit-backdrop-filter: var(--glass-blur-strong);
+  border: 1px solid var(--inner-border);
+  box-shadow: var(--shadow-pill), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  overflow: hidden;
+  -webkit-app-region: no-drag;
+}
+.menu.open { display: flex; }
+
+.menu input[type="search"] {
+  margin: 8px;
+  height: 32px;
+  padding: 0 12px;
+  font-size: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--chip-border);
+  background: var(--chip-bg);
+  color: var(--text);
+  outline: none;
+}
+
+.menu-list { overflow-y: auto; padding: 0 4px 6px; }
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 32px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  text-align: left;
+}
+.menu-item > span:first-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.menu-item:hover { background: var(--hover); }
+.menu-item.active { color: var(--red); font-weight: 600; }
+.menu-item .native { flex: 0 0 auto; color: var(--text-dim); }
+
+/* ---------- The pill itself ---------- */
+.pill {
+  -webkit-app-region: drag;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 6px;
+  height: 46px;
+  padding: 6px 10px;
+  border-radius: var(--radius);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.04)),
+    linear-gradient(var(--pill-tint), var(--pill-tint)),
+    var(--pill-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--inner-border);
+  box-shadow:
+    var(--shadow-pill),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.10);
+}
+
+.dot {
+  flex: 0 0 auto;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--indicator);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--indicator) 18%, transparent);
+}
+.dot.paused { background: var(--red); box-shadow: 0 0 0 3px color-mix(in srgb, var(--red) 16%, transparent); }
+.dot.busy { background: #f5a623; box-shadow: 0 0 0 3px rgba(245, 166, 35, 0.18); }
+.dot.offline { background: #8e8e93; box-shadow: 0 0 0 3px rgba(142, 142, 147, 0.18); }
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  /* Language names get layout priority (M5.12): chips never shrink;
+     the usage readout beside them is what ellipsises under pressure. */
+  flex: 0 0 auto;
+  min-width: 0;
+  max-width: 140px;
+  height: 30px;
+  padding: 0 10px;
+  border-radius: var(--radius);
+  background: var(--chip-bg);
+  border: 1px solid var(--chip-border);
+  font-size: 12px;
+  white-space: nowrap;
+}
+.chip > span:first-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.chip:hover { border-color: var(--red); }
+.chip .caret { flex: 0 0 auto; font-size: 9px; color: var(--text-dim); }
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  font-size: 14px;
+  color: var(--text-dim);
+}
+.icon-btn:hover { background: var(--hover); color: var(--red); }
+
+.spacer { flex: 1 1 auto; min-width: 0; }
+
+/* API usage readout (M5.10) — sits where the ON/OFF switch used to be.
+   Pause/resume lives on Ctrl+Alt+T and in the tray menu; while paused
+   this slot says so. */
+.usage {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--text-dim);
+  -webkit-app-region: no-drag;
+}
+
+/* ---------- Settings ---------- */
+.settings {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  border-radius: 18px;
+  border: 1px solid var(--inner-border);
+  overflow: hidden;
+  background: var(--settings-bg);
+  -webkit-app-region: no-drag;
+}
+
+/* The frameless window's own title bar: the whole strip drags the
+   window; its buttons stay clickable. */
+.titlebar {
+  -webkit-app-region: drag;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 42px;
+  padding: 0 6px 0 16px;
+  border-bottom: 1px solid var(--divider);
+}
+.titlebar-title { font-size: 12.5px; font-weight: 600; color: var(--text-dim); letter-spacing: 0.01em; }
+.titlebar-btns { display: flex; gap: 2px; -webkit-app-region: no-drag; }
+.titlebar-btns button {
+  width: 38px;
+  height: 30px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+.titlebar-btns button:hover { background: var(--hover); color: var(--text); }
+#win-close:hover { background: var(--red); color: #fff; }
+
+.settings-body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 8px 26px 32px;
+}
+.settings h1 { font-size: 20px; font-weight: 650; letter-spacing: -0.01em; margin: 0 0 4px; }
+.settings h2 {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 26px 0 10px;
+  padding-top: 18px;
+  border-top: 1px solid var(--divider);
+  color: var(--red);
+}
+.settings h2:first-of-type { border-top: none; padding-top: 0; margin-top: 4px; }
+.settings p, .settings li { font-size: 12px; line-height: 1.55; color: var(--text-dim); }
+.settings .notice {
+  border: 1px solid var(--card-border);
+  border-left: 3px solid var(--red);
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: var(--card-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+/* About panel — a quiet glass card with one strong opening line. */
+.about-card {
+  position: relative;
+  overflow: hidden;
+  padding: 18px 20px 16px;
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
+  background:
+    radial-gradient(120% 140% at 100% 0%, color-mix(in srgb, var(--red) 13%, transparent), transparent 52%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0.10)),
+    var(--card-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 10px 28px rgba(0, 0, 0, 0.06);
+}
+.about-kicker {
+  margin-bottom: 10px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--red);
+}
+.about-card p {
+  position: relative;
+  margin: 0 0 9px;
+  font-size: 12.5px;
+  line-height: 1.65;
+}
+.about-card .about-lede {
+  margin-bottom: 11px;
+  font-size: 16px;
+  line-height: 1.42;
+  font-weight: 650;
+  letter-spacing: -0.015em;
+  color: var(--text);
+}
+.about-card .about-signoff {
+  margin-bottom: 0;
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* Support panel (bottom of Settings): thanks line + QR tiles. The
+   tiles stay white in both themes — QR codes need the contrast. */
+.about-card .support-thanks {
+  margin-bottom: 4px;
+  font-size: 15px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+.support-qrs { display: flex; gap: 14px; flex-wrap: nowrap; margin-top: 12px; }
+.support-qr { flex: 1 1 0; min-width: 0; }
+.support-qr {
+  margin: 0;
+  padding: 10px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+.support-qr img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+/* ---------- Settings: key profiles ---------- */
+.settings .status-line { min-height: 18px; margin: 0 0 2px; color: var(--red); font-weight: 600; }
+.settings .status-line:empty { min-height: 0; margin: 0; }
+.settings .help { font-size: 12px; color: var(--text-dim); line-height: 1.5; }
+.settings .radio-row { display: block; font-size: 12px; line-height: 1.6; color: var(--text-dim); cursor: pointer; }
+.settings ol { margin: 6px 0 6px 16px; padding: 0; }
+.settings ol li { font-size: 12px; line-height: 1.55; color: var(--text-dim); }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: 1px solid var(--chip-border);
+  background: var(--card-bg);
+  font-size: 12px;
+  white-space: nowrap;
+}
+.btn:hover { border-color: var(--red); }
+.btn.primary { background: var(--red); border-color: var(--red); color: #fff; }
+.btn.small { height: 28px; padding: 0 10px; font-size: 12px; border-radius: 8px; }
+.btn.danger:hover { background: var(--red); color: #fff; }
+.btn:disabled { opacity: 0.4; cursor: default; }
+
+.profile-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  background: var(--card-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+.profile-main { min-width: 0; }
+.profile-title {
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+.profile-title strong {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.profile-title input[type="text"] {
+  height: 28px;
+  font-size: 12px; padding: 0 8px; border-radius: 8px;
+  border: 1px solid var(--chip-border); background: var(--menu-bg); color: var(--text);
+}
+.profile-actions { display: flex; gap: 6px; flex-wrap: nowrap; }
+
+.badge {
+  font-size: 11px;
+  line-height: 1;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--chip-border);
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+.badge-valid { color: #1e9e57; border-color: #1e9e57; }
+.badge-invalid { color: #fff; background: var(--red); border-color: var(--red); }
+.badge-quota { color: #b87700; border-color: #b87700; }
+
+.add-key { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; align-items: center; }
+.add-key input, .add-key select {
+  flex: 1 1 180px;
+  min-width: 0;
+  height: 36px;
+  padding: 0 12px;
+  font-size: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--chip-border);
+  background: var(--card-bg);
+  color: var(--text);
+  outline: none;
+}
+.add-key select { flex: 0 1 180px; }
+#block-picker { flex: 1 1 auto; }
+
+.order-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-dim);
+  padding: 6px 10px;
+  margin-bottom: 6px;
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  background: var(--card-bg);
+}
+.order-row span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#export-out {
+  font-size: 11px;
+  white-space: pre-wrap;
+  word-break: break-all;
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  background: var(--card-bg);
+  padding: 10px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+/* ---------- Appearance: accent colour wheel (M5.2) ---------- */
+.accent-row { display: flex; gap: 18px; align-items: flex-start; flex-wrap: wrap; }
+.opacity-row { margin-top: 14px; }
+.opacity-controls { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
+.opacity-controls input[type="range"] { flex: 0 1 220px; }
+.opacity-controls code { min-width: 40px; }
+.wheel-wrap { position: relative; width: 132px; height: 132px; flex: 0 0 auto; isolation: isolate; }
+/* A frosted glass disc behind the colour wheel (M5.11). */
+.wheel-wrap::before {
+  content: "";
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--card-bg) 75%, transparent);
+  backdrop-filter: blur(10px) saturate(1.6);
+  -webkit-backdrop-filter: blur(10px) saturate(1.6);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.10), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  z-index: -1;
+}
+#accent-wheel {
+  display: block;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18), inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+  touch-action: none;
+}
+.wheel-marker {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.accent-side { display: flex; flex-direction: column; gap: 8px; min-width: 200px; flex: 1 1 200px; }
+.swatches { display: flex; gap: 8px; flex-wrap: wrap; }
+.swatch {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  padding: 0;
+}
+.swatch.active { outline: 2px solid var(--text); outline-offset: 2px; }
+#accent-bright { width: 180px; max-width: 100%; }
+/* Both Appearance sliders take the chosen accent (M5.15: the glass
+   opacity slider kept Chromium's default blue — it had no rule). */
+#accent-bright, #glass-opacity { accent-color: var(--red); cursor: pointer; }
+.accent-current { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-dim); }
+.accent-dot { width: 14px; height: 14px; border-radius: 50%; border: 1px solid var(--chip-border); }
