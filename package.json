@@ -1,0 +1,136 @@
+{
+  "description": "KBMK (Kotha Bolo Mon Khule) - Windows system-tray translation widget",
+  "devDependencies": {
+    "@types/node": "22.18.0",
+    "electron": "35.7.5",
+    "electron-builder": "26.17.0",
+    "typescript": "5.9.3",
+    "vite": "6.4.1",
+    "vitest": "3.2.4"
+  },
+  "main": "dist/main/main.js",
+  "dependencies": {
+    "electron-store": "8.2.0",
+    "koffi": "3.3.3",
+    "uiohook-napi": "1.5.5"
+  },
+  "optionalDependencies": {
+    "keytar": "7.9.0"
+  },
+  "name": "kbmk",
+  "private": true,
+  "scripts": {
+    "build": "npm run build:main && npm run build:renderer",
+    "build:main": "tsc -p tsconfig.main.json",
+    "build:renderer": "vite build",
+    "start": "npm run build && electron .",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p tsconfig.renderer.json && tsc --noEmit -p tsconfig.main.json",
+    "pack": "npm run build && electron-builder --dir",
+    "dist": "npm run build && electron-builder --win",
+    "dist:linux": "npm run build && electron-builder --linux",
+    "dist:mac": "npm run build && electron-builder --mac"
+  },
+  "version": "0.7.0",
+  "build": {
+    "appId": "com.kbmk.app",
+    "productName": "KBMK",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**",
+      "assets/**",
+      "package.json",
+      "!dist/**/*.map"
+    ],
+    "asarUnpack": [
+      "**/*.node"
+    ],
+    "npmRebuild": false,
+    "win": {
+      "icon": "assets/icon.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "files": [
+        "dist/**",
+        "assets/**",
+        "package.json",
+        "!dist/**/*.map",
+        "!node_modules/uiohook-napi/prebuilds/{darwin-*,linux-*}/**"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "KBMK"
+    },
+    "portable": {
+      "artifactName": "KBMK-Portable.exe"
+    },
+    "electronLanguages": [
+      "en-US"
+    ],
+    "compression": "maximum",
+    "mac": {
+      "icon": "assets/icon-1024.png",
+      "category": "public.app-category.utilities",
+      "identity": null,
+      "target": [
+        {
+          "target": "dmg"
+        },
+        {
+          "target": "zip"
+        }
+      ],
+      "files": [
+        "dist/**",
+        "assets/**",
+        "package.json",
+        "!dist/**/*.map",
+        "!node_modules/uiohook-napi/prebuilds/{linux-*,win32-*}/**"
+      ]
+    },
+    "linux": {
+      "icon": "assets/icon-1024.png",
+      "category": "Utility",
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "files": [
+        "dist/**",
+        "assets/**",
+        "package.json",
+        "!dist/**/*.map",
+        "!node_modules/uiohook-napi/prebuilds/{darwin-*,win32-*}/**"
+      ]
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/k3ypissr/KBMK.git"
+  },
+  "homepage": "https://k3ypissr.github.io/KBMK/",
+  "license": "GPL-3.0-only"
+}
