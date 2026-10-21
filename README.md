@@ -22,6 +22,7 @@ languages, through your own API key from Google Cloud Translation,
 Microsoft Azure Translator, or DeepL — plus an experimental keyless mode.
 
 📖 **Full manual:** [USER_MANUAL.md](USER_MANUAL.md) ·
+🕘 **History & development notes:** [CHANGELOG.md](CHANGELOG.md)
 
 ---
 
@@ -63,6 +64,15 @@ Microsoft Azure Translator, or DeepL — plus an experimental keyless mode.
   (Ctrl+V, Shift+Insert, or right-click → Paste) and a glass modal shows
   `pasted → translation`. **Space** replaces, **Esc** keeps. One line at
   a time, up to 300 characters.
+- **Sentence offers** — words are translated one at a time as you type,
+  which can bend a sentence's grammar (agreement, prepositions, word
+  order). So when you end a sentence (`.`, `!`, `?`, `।`, or Enter),
+  KBMK translates the *whole sentence* and — if it reads better than
+  the draft on screen — offers the swap above the pill.
+  **Space** replaces the sentence, **Esc** keeps it as typed,
+  **Ctrl+Alt+Z** undoes an accepted swap. If it already reads well,
+  the translation is shown briefly with a ✓ instead. On by default;
+  turn it off in Settings → App behaviour.
 - **Undo & pause hotkeys** — Ctrl+Alt+Z undoes the last replacement;
   Ctrl+Alt+T pauses/resumes KBMK from anywhere.
 - **100+ languages** — the language menus follow your active key's
@@ -87,19 +97,27 @@ Microsoft Azure Translator, or DeepL — plus an experimental keyless mode.
 | **Keyless (experimental)** | Nothing | No key needed; quality and reliability vary. |
 
 Anyone you use a key from pays for your usage — use a separate key for
-this app. Keys are stored **only** in Windows Credential Manager, never
-in files, settings exports, or logs.
+this app. Keys are stored **only** in your operating system's secure key store
+— Windows Credential Manager on Windows, the Secret Service keyring
+on Linux, and the Keychain on macOS — never in files, settings
+exports, or logs. On Linux the keyring must be installed for keys to
+save: `sudo apt install libsecret-1-0 gnome-keyring` (Debian/Ubuntu)
+or `sudo dnf install libsecret gnome-keyring` (Fedora), then restart
+KBMK.
 
 ## Privacy
 
 - Keystrokes are **never** written to disk, logged, or sent anywhere
-  except the single finished word/phrase you trigger a translation for,
-  which goes to *your chosen provider* with *your key*.
+  except the single finished word/phrase you trigger a translation for
+  — and, at the end of a sentence, that finished sentence (sentence
+  offers) — which goes to *your chosen provider* with *your key*.
 - **No telemetry, no analytics, no accounts, no ads.**
-- API keys live only in Windows Credential Manager. Settings export
-  contains labels, counters and statuses — **never keys**.
-- Your keys and settings live on *your PC only* (Credential Manager +
-  `%APPDATA%`) — never inside the app or the installer. A fresh install
+- API keys live only in your OS secure key store (Windows Credential
+  Manager, the Linux Secret Service keyring, or the macOS Keychain).
+  Settings export contains labels, counters and statuses — **never keys**.
+- Your keys and settings live on *your PC only* (your OS secure key
+  store + the app's per-user data folder) — never inside the app or
+  the installer. A fresh install
   on another PC starts empty, and Settings → **Start over** wipes a PC
   completely.
 
@@ -121,18 +139,50 @@ Grab the latest build from the **[Releases page](../../releases)**:
 
 > **Platform note:** KBMK's heart — global key capture, in-place text
 > replacement, paste offers, the per-app block list — is Windows
-> machinery today. The Linux and macOS builds run the full interface,
-> settings and translation providers, and degrade gracefully where a
-> Windows-only piece is missing, but typing/paste replacement is
-> Windows-only for now.
+> machinery. In-place replacement also works on Linux under X11 (via
+> XTest); on Wayland it reaches X11/XWayland apps only, since native
+> Wayland apps cannot receive synthetic keys from any app. The macOS
+> build runs the full interface, settings and translation providers
+> and logs translations, but does not replace text yet. Wherever a
+> piece is missing, the app degrades gracefully and the log explains
+> what is off.
+
+## Build from source
+
+KBMK is open source (see `LICENSE`). To run or build it yourself:
+
+**Prerequisites**
+
+- Node.js 20+ and npm.
+- Windows: Visual Studio Build Tools 2022 (Desktop development with
+  C++ workload) and Python — a couple of native modules compile
+  locally. On Linux, install `libsecret-1-0` and `gnome-keyring` so
+  API keys can be stored.
+- If your npm blocks dependency install scripts (npm 12 does by
+  default), approve them for this project's packages first
+  (`npm install-scripts approve electron esbuild keytar koffi uiohook-napi`),
+  or the Electron binary never downloads.
+
+```bash
+git clone https://github.com/k3ypissr/KBMK.git
+cd KBMK
+npm install
+npm test        # 250 unit tests — pure logic, no Windows needed
+npm start       # build + run the app
+npm run dist    # Windows installer + portable (dist:linux / dist:mac too)
+```
+
+The Windows-only machinery (global hooks, text injection) sits
+behind interfaces, so the translation logic, providers and sentence
+tracking are fully testable anywhere.
 
 ## Hotkeys
 
 | Keys | Action |
 | --- | --- |
-| **Space** | Accept a paste offer (replace the pasted text) |
-| **Esc** | Dismiss a paste offer (keep the pasted text) |
-| **Ctrl+Alt+Z** | Undo the last replacement (typed or pasted) |
+| **Space** | Accept an offer (replace the pasted text, or the sentence) |
+| **Esc** | Dismiss an offer (keep your text as it is) |
+| **Ctrl+Alt+Z** | Undo the last replacement (typed, pasted, or sentence) |
 | **Ctrl+Alt+T** | Pause / resume KBMK anywhere |
 
 ## Support
