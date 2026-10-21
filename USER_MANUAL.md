@@ -33,6 +33,8 @@ provider with *your* key.
 - **Type-and-translate** — finished words are replaced in place, in any app
 - **Paste offers** — paste a word, phrase or short sentence and approve
   the translation with one keypress
+- **Sentence offers** — finish a sentence and approve its whole-sentence
+  translation, with grammar and word order fixed
 - **Undo** — the last replacement can always be taken back
 - **Your keys, your choice** — multiple API key profiles across Google,
   Azure and DeepL, with optional quota fallback
@@ -89,10 +91,13 @@ the app → Open** to pass Gatekeeper.
 ### Platform notes
 
 KBMK's core machinery — global key capture, in-place text replacement
-and the per-app block list — is Windows technology. The Linux and
-macOS builds run the full interface, settings and translation
-providers and degrade gracefully (the log explains what is off), but
-for now **typing and paste replacement are Windows-only**.
+and the per-app block list — is Windows technology. **Typing and
+paste replacement also work on Linux under X11** (via XTest). On
+Wayland, replacement reaches X11/XWayland apps only — native Wayland
+apps cannot receive synthetic keys from any app. The macOS build runs
+the full interface, settings and translation providers and logs
+translations, but does not replace text yet. Everywhere else the app
+degrades gracefully and the log explains what is off.
 
 ---
 
@@ -164,9 +169,14 @@ This advice is also shown inside the app, because it matters:
 - Use a **separate key** for KBMK, so you can revoke it without
   breaking anything else.
 
-KBMK stores keys **only** in Windows Credential Manager — never in
-files, never in settings exports, never in logs, and the Settings
-window itself only ever sees a key's last 4 characters.
+KBMK stores keys **only** in your operating system's secure key store —
+Windows Credential Manager on Windows, the Keychain on macOS, and the
+Secret Service keyring on Linux — never in files, never in settings
+exports, never in logs, and the Settings window itself only ever sees a
+key's last 4 characters. On Linux the keyring must be installed for
+keys to save: `sudo apt install libsecret-1-0 gnome-keyring`
+(Debian/Ubuntu) or `sudo dnf install libsecret gnome-keyring` (Fedora),
+then restart KBMK.
 
 ### Managing keys
 
@@ -177,7 +187,7 @@ For each saved key you can:
   *Quota* (limit reached).
 - **Set active** — choose which key does the translating.
 - **Rename** / **Remove** — removal asks for confirmation and deletes
-  the secret from Credential Manager too.
+  the secret from the key store too.
 - **Usage counter** — successful translations are counted per key, per
   month (the counter resets on the 1st). DeepL keys show DeepL's own
   character usage (e.g. `1.2k/500k chars`); Google and Azure keys show
@@ -262,10 +272,47 @@ links, emails, file paths and code never trigger an offer. Mouse-paste
 detection is a heuristic (the clipboard doesn't change across a Paste
 pick) — every time it fires, the app log says so.
 
+### Sentence offers
+
+Words are translated one at a time, the moment you finish them. That
+is fast, but a word on its own doesn't know its sentence — verb forms
+(is/am/are), prepositions and word order can come out bent. (Bengali,
+for example, puts the verb at the end: "I eat rice" typed word by
+word gives আমি খাই ভাত — "I eat rice" in English order — instead of
+আমি ভাত খাই.)
+
+So when you **end a sentence** — with `.`, `!`, `?`, the danda `।`,
+or **Enter** — KBMK translates the *whole sentence* at once, the way
+pasting the sentence into a translator would. If that version reads
+differently from the word-by-word draft on screen, a modal above the
+pill offers it:
+
+- **Space** — replace the whole sentence with its full translation.
+- **Esc** — keep the sentence exactly as typed.
+- **Anything else** — typing on, clicking, switching apps — dismisses
+  the offer, and it expires by itself after 15 seconds.
+
+Good to know:
+
+- An accepted swap is a normal replacement: **Ctrl+Alt+Z** undoes it
+  and restores your word-by-word draft.
+- The offer costs **one extra translation call per sentence** (the
+  sentence's characters), on top of the word-by-word calls.
+- Only a sentence typed **in one go** is tracked: if you click away,
+  switch apps, or edit back into the middle of it, tracking restarts
+  and that sentence keeps its word-by-word translation.
+- Sentences up to **300 characters**; a `.` after a number is read as
+  a decimal point, not a sentence end.
+- If the whole-sentence translation reads the same as the draft,
+  KBMK shows it briefly above the pill with a **✓** — your sentence
+  was already right, and nothing is swapped.
+- Turn sentence offers off in **Settings → App behaviour** if you
+  prefer words only.
+
 ### Undo
 
-**Ctrl+Alt+Z** undoes the last replacement — typed or pasted — putting
-your original word back. Only the most recent swap can be undone.
+**Ctrl+Alt+Z** undoes the last replacement — typed, pasted, or a
+sentence — putting your original text back. Only the most recent swap can be undone.
 
 ### Pausing KBMK
 
@@ -330,7 +377,7 @@ Manager, so an export is always safe to share.
 ## Start over (factory reset)
 
 **Settings → Start over → Remove all keys and settings** wipes this
-PC clean: every key (including its Credential Manager secret), the
+PC clean: every key (including its secret in the key store), the
 block list, your glass colour and opacity, and launch-at-login. KBMK
 returns to its first-run state, with the setup wizard waiting. Use it
 before handing a PC to someone else — or simply to start fresh.
@@ -406,8 +453,8 @@ The builds are unsigned. Windows: **More info → Run anyway**. macOS:
 **right-click → Open**. This is a one-time step.
 
 **Settings export doesn't contain my key.**
-By design. Keys live only in Credential Manager and are never
-exported.
+By design. Keys live only in the operating system's secure key store
+and are never exported.
 
 ---
 
@@ -422,7 +469,7 @@ exported.
   or files when a replacement happens, KBMK clears the clipboard after
   pasting rather than leaving the translation sitting on it.
 - **DeepL** — ~35 languages, no Bengali.
-- **Core features are Windows-only** (see *Platform notes*).
+- **Replacement is Windows + Linux/X11** (see *Platform notes*); macOS logs translations only.
 
 ---
 
