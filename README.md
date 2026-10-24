@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.6.2-e24b4a" alt="Version 0.6.2">
+  <img src="https://img.shields.io/badge/version-0.7.0-e24b4a" alt="Version 0.7.0">
   <img src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-3a2a30" alt="Platform: Windows | Linux | macOS">
   <img src="https://img.shields.io/badge/Electron-35-47848f" alt="Electron 35">
   <img src="https://img.shields.io/badge/privacy-no%20telemetry-2ecc71" alt="Privacy: no telemetry">
@@ -125,13 +125,15 @@ KBMK.
 
 Grab the latest build from the **[Releases page](../../releases)**:
 
-- **Windows — Installer (recommended):** `KBMK Setup 0.6.2.exe` — a
+- **Windows — Installer (recommended):** `KBMK.Setup.0.7.0.exe` — a
   per-user installer (no admin rights needed) with Start Menu and
   desktop shortcuts.
 - **Windows — Portable:** `KBMK-Portable.exe` — a true single file;
   carry it anywhere and run it as-is.
-- **Linux:** the `.AppImage` — make it executable (`chmod +x`) and run.
-- **macOS:** the `.dmg` (or the `.zip`) containing `KBMK.app`.
+- **Linux:** `KBMK-0.7.0.AppImage` — **not attached to the v0.7.0
+  release yet**. When available, make it executable (`chmod +x`) and run.
+- **macOS:** the `.dmg` (or the `.zip`) containing `KBMK.app` —
+  **not attached to the v0.7.0 release yet**.
 
 > **Unsigned builds:** Windows SmartScreen will warn on first run —
 > choose **More info → Run anyway**. On macOS, right-click the app →
@@ -167,7 +169,7 @@ KBMK is open source (see `LICENSE`). To run or build it yourself:
 git clone https://github.com/k3ypissr/KBMK.git
 cd KBMK
 npm install
-npm test        # 250 unit tests — pure logic, no Windows needed
+npm test        # 249 unit tests — pure logic, no Windows needed
 npm start       # build + run the app
 npm run dist    # Windows installer + portable (dist:linux / dist:mac too)
 ```

@@ -1,6 +1,6 @@
 # KBMK — User Manual
 
-**KBMK (Kotha Bolo Mon Khule)** · Version 0.6.x · Windows 10/11 (Linux & macOS builds included)
+**KBMK (Kotha Bolo Mon Khule)** · Version 0.7.0 · Windows 10/11 (Linux & macOS builds included)
 
 ---
 
@@ -23,10 +23,12 @@ providers you choose yourself: Google Cloud Translation, Microsoft
 Azure Translator, DeepL, or an experimental keyless mode.
 
 KBMK is **private by design**: it has no accounts, no telemetry and no
-analytics. Your API keys live only in your PC's Windows Credential
-Manager. The only text that ever leaves your computer is the word or
-short phrase you trigger a translation for, sent to *your* chosen
-provider with *your* key.
+analytics. Your API keys live only in your operating system's secure key
+store — Windows Credential Manager on Windows, the Keychain on
+macOS, and the Secret Service keyring on Linux. The only text that
+ever leaves your computer is the word, phrase or finished sentence
+you trigger a translation for, sent to *your* chosen provider with
+*your* key.
 
 ### What KBMK does at a glance
 
@@ -60,7 +62,7 @@ provider with *your* key.
 
 ### Windows — installer (recommended)
 
-1. Run **`KBMK Setup 0.6.x.exe`**.
+1. Run **`KBMK.Setup.0.7.0.exe`**.
 2. The installer is not code-signed, so Windows SmartScreen will warn
    you the first time: click **More info → Run anyway**. (This is
    normal for independent software without a paid signing certificate.)
@@ -79,14 +81,16 @@ carries your data.
 
 ### Linux
 
-Run **`KBMK-0.6.3.AppImage`**: `chmod +x KBMK-0.6.3.AppImage`, then
+**Not attached to the v0.7.0 release yet.** When available, run
+**`KBMK-0.7.0.AppImage`**: `chmod +x KBMK-0.7.0.AppImage`, then
 launch it. No installation.
 
 ### macOS
 
-Open the **`.dmg`** (or unzip the `.zip`) and drag **KBMK** to
-Applications. The build is unsigned, so on first launch **right-click
-the app → Open** to pass Gatekeeper.
+**Not attached to the v0.7.0 release yet.** When available, open the
+**`.dmg`** (or unzip the `.zip`) and drag **KBMK** to Applications.
+The build is unsigned, so on first launch **right-click the app →
+Open** to pass Gatekeeper.
 
 ### Platform notes
 
